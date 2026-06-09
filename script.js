@@ -1,4 +1,4 @@
-const cartContainer = document.getElementById("cart-container");
+ const cartContainer = document.getElementById("cart-container");
 const productsContainer = document.getElementById("products-container");
 const dessertCards = document.getElementById("dessert-card-container");
 const cartBtn = document.getElementById("cart-btn");
@@ -142,3 +142,80 @@ cartBtn.addEventListener("click", () => {
 });
 
 clearCartBtn.addEventListener("click", cart.clearCart.bind(cart));
+
+// =========================================================
+// NEW: DYNAMIC CHECKOUT MODAL INTERACTIVE LOGIC
+// =========================================================
+
+// Grab DOM Modal Elements
+const checkoutModal = document.getElementById('checkout-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const confirmOrderBtn = document.getElementById('confirm-order-btn');
+
+// Dynamically inject a visible "Checkout" button right inside the FreeCodeCamp shopping cart panel
+if (cartContainer && !document.getElementById('open-checkout-btn')) {
+    const checkoutTriggerBtn = document.createElement('button');
+    checkoutTriggerBtn.id = 'open-checkout-btn';
+    checkoutTriggerBtn.className = 'btn';
+    checkoutTriggerBtn.style.margin = "15px auto";
+    checkoutTriggerBtn.style.width = "85%";
+    checkoutTriggerBtn.innerText = "Checkout 💳";
+    cartContainer.appendChild(checkoutTriggerBtn);
+    
+    // Wire up the button to collect cart data and trigger our modal display!
+    checkoutTriggerBtn.addEventListener('click', () => {
+        openCheckoutModal();
+    });
+}
+
+function openCheckoutModal() {
+    const modalItemsList = document.getElementById('modal-items-list');
+    const modalTotalPrice = document.getElementById('modal-total-price');
+    
+    modalItemsList.innerHTML = "";
+    
+    if (cart.items.length === 0) {
+        modalItemsList.innerHTML = "<p style='text-align:center; color:#777;'>Your cart is empty! Add some sweets first. 🛒</p>";
+        modalTotalPrice.innerText = "$0.00";
+    } else {
+        // Group the individual cart items to calculate quantities accurately
+        const groupedCounts = {};
+        cart.items.forEach((item) => {
+            groupedCounts[item.id] = (groupedCounts[item.id] || { name: item.name, price: item.price, quantity: 0 });
+            groupedCounts[item.id].quantity += 1;
+        });
+        
+        // Append text dynamically into the modal list view area
+        Object.values(groupedCounts).forEach(item => {
+            const itemRow = document.createElement('p');
+            itemRow.style.margin = "8px 0";
+            itemRow.innerHTML = `<strong>${item.name}</strong> x ${item.quantity} - <span style='color:#ff6f61;'>$${(item.price * item.quantity).toFixed(2)}</span>`;
+            modalItemsList.appendChild(itemRow);
+        });
+        
+        modalTotalPrice.innerText = cartTotal.textContent;
+    }
+    
+    // Slide modal on screen
+    checkoutModal.classList.add('open');
+}
+
+// Close Modal
+closeModalBtn.addEventListener('click', () => {
+    checkoutModal.classList.remove('open');
+});
+
+// Confirm Order Action
+confirmOrderBtn.addEventListener('click', () => {
+    alert("✨ Order Placed Successfully! E go sweet you well well! 🍰");
+    checkoutModal.classList.remove('open');
+    
+    // Wipe out the local cart state instantly
+    cart.items = [];
+    cart.total = 0;
+    productsContainer.innerHTML = "";
+    totalNumberOfItems.textContent = 0;
+    cartSubTotal.textContent = 0;
+    cartTaxes.textContent = 0;
+    cartTotal.textContent = 0;
+});

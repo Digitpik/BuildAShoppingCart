@@ -113,4 +113,60 @@ body {
   #cart-container {
     width: 300px;
   }
+}/* Smooth Hover Animation for Dessert Cards */
+.dessert-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.dessert-card:hover {
+    transform: translateY(-8px); /* Gently lifts the card up */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Overlay Background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dim background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 1000;
+}
+
+/* Open state for Modal */
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Modal Box Window with Pop-in Animation */
+.modal-content {
+    background: #fff;
+    color: #333;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    transform: translateY(50px);
+    transition: transform 0.4s ease;
+}
+
+.modal-overlay.open .modal-content {
+    transform: translateY(0); /* Slides perfectly up to center */
+}
+
+/* Quick Styling for Buttons inside Modal */
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.btn-primary { background: #ff6f61; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.btn-secondary { background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
